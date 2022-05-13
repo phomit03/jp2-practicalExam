@@ -42,6 +42,7 @@ public class Main {
                     }
                     case 3: {
                         try {
+                            System.out.println("\nStudents List: \n");
                             sm.showStudent();
                         } catch (Exception e) {
                             System.out.println(e.getMessage());

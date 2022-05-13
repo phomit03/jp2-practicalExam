@@ -1,29 +1,26 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class StudentManage {
     private ArrayList<Students> studentsList = new ArrayList<Students>();
+
     Scanner sc = new Scanner(System.in);
-
-    //getter & setter
-
-
-
     //input
     public String inputID() {
         System.out.print("Input student ID: ");
-        String ID = sc.next();
+        String ID = sc.nextLine();
         return ID;
     }
     public String inputFirstName() {
         System.out.print("Input student first name: ");
-        String firstname = sc.next();
+        String firstname = sc.nextLine();
         return firstname;
     }
     public String inputLastName() {
         System.out.print("Input student last name: ");
-        String lastname = sc.next();
+        String lastname = sc.nextLine();
         return lastname;
     }
     public int inputAge() {
@@ -53,24 +50,35 @@ public class StudentManage {
     }
 
     //save students
-    public void saveStudents() throws FileNotFoundException, IOException {
-        File f = new File("students.dat");
-        FileOutputStream fout = new FileOutputStream(f);
-        ObjectOutputStream ojbout = new ObjectOutputStream(fout);
+    public void saveStudents() throws IOException {
+        try {
+            FileOutputStream fos = new FileOutputStream("students.txt");
+            DataOutputStream dos = new DataOutputStream(fos);
 
-        ojbout.writeObject(studentsList);
-
-        ojbout.close();
-        fout.close();
+            //read file
+            FileInputStream fis = new FileInputStream("students.txt");
+            DataInputStream dis = new DataInputStream(fis);
+            String txt = dis.readLine();
+            while (txt != null) {
+                System.out.println(txt);
+                txt = dis.readLine();
+            }
+        } catch (FileNotFoundException f) {
+            System.out.println("File not found");
+        } catch (IOException io) {
+            System.out.println("Error...");
+        }
     }
+
     //read files -> show student
     public void readFiles() throws IOException, ClassNotFoundException {
-        File f = new File("students.dat");
+        File f = new File("students.txt");
         FileInputStream fin = new FileInputStream(f);
         ObjectInputStream objin = new ObjectInputStream(fin);
 
         studentsList = new ArrayList<Students>();
         studentsList = (ArrayList)objin.readObject();
+
         showStudent();
 
         objin.close();
@@ -83,10 +91,11 @@ public class StudentManage {
         }
         else{
             System.out.println("|   EnrolID   |      Full name      |  Age  |");
-            System.out.print("\n========================================\n\n");
+            System.out.print("=============================================\n");
             for (Students st : studentsList) {
-                System.out.format("| %12s | %20s | %6d |\n",st.getEnrolID(),st.getFirstName() + " " + st.getLastName(),st.getAge());
+                System.out.format("| %11s | %19s | %5d |\n",st.getEnrolID(),st.getFirstName() + " " + st.getLastName(),st.getAge());
             }
         }
     }
+
 }
